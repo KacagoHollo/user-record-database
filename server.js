@@ -12,14 +12,33 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-
-// mongoose.connection.db.dropDatabase();
-
-const loadFunction = async () => {
-  mongoose
+mongoose
   .connect(process.env.USERS)
   .then(() => console.log("Connected"))
   .catch(() => console.log("Error"));
+
+const userSchema = new mongoose.Schema({
+  id: Number,
+  name: String,
+  username: String,
+  email: String,
+  address: {street: String, suite: String, city: String, zipcode: String, geo: {
+        lat: String, lng: String  
+      }},
+      phone: String,
+      website: String,
+      company: {
+        name: String,
+        catchPhrase: String,
+        bs: String
+      } 
+    })
+
+const User = mongoose.model('User', userSchema)
+// mongoose.connection.db.dropDatabase();
+
+const loadFunction = async () => {
+  
 
   const response = await http.get('https://jsonplaceholder.typicode.com/users');
   const userData = response.data
@@ -48,43 +67,27 @@ const loadFunction = async () => {
      )
   }
   )
-
+ 
 }
 
 
 
+app.get('/', async (req, res) => {
+  const finding = await User.find();
+  res.json(finding)
+})
 
-app.get("/", (req, res) => {
-    const userSchema = new mongoose.Schema({
-        id: Number,
-        name: String,
-        username: String,
-        email: String,
-        address: {street: String, suite: String, city: String, zipcode: String, geo: {
-          lat: String, lng: String  
-        }},
-        phone: String,
-        website: String,
-        company: {
-            name: String,
-            catchPhrase: String,
-            bs: String
-        } 
-    })
-    const User = mongoose.model('User', userSchema)
 
-    User.find({},(err, user)=>{
-      if(err){
-          console.log("Not Worked");
-          console.log(err);
-      }else{
-          console.log("All users in DB are");
-          console.log(user);
-      }
-  })
-    }
-)
+// app.get("/", (req, res) => {
+  
+ 
+//     })
+    
 
+
+    
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-  })
+  console.log(`Example app listening on port ${port}`)
+})
+
+loadFunction()
