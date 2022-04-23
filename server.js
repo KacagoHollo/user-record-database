@@ -13,7 +13,14 @@ app.use(cors());
 app.use(express.json());
 
 mongoose
-  .connect(process.env.USERS)
+  .connect(process.env.USERS, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then (() =>
+    app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`)
+    }))
   .then (() => mongoose.connection.db.dropDatabase())
   .then(() => console.log("Connected"))
   .catch(() => console.log("Error"));
@@ -40,13 +47,12 @@ const User = mongoose.model('User', userSchema)
 
 
 const loadFunction = async () => {
-  
 
   const response = await http.get('https://jsonplaceholder.typicode.com/users');
   const userData = response.data
 
   userData.map((person) => {
-    
+
     const newUser = new User ({
       id: person.id,
         name: person.name,
@@ -88,8 +94,6 @@ app.get('/', async (req, res) => {
 
 
     
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+
 
 loadFunction()
