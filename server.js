@@ -14,8 +14,10 @@ app.use(express.json());
 
 mongoose
   .connect(process.env.USERS)
+  .then (() => mongoose.connection.db.dropDatabase())
   .then(() => console.log("Connected"))
   .catch(() => console.log("Error"));
+
 
 const userSchema = new mongoose.Schema({
   id: Number,
@@ -35,7 +37,7 @@ const userSchema = new mongoose.Schema({
     })
 
 const User = mongoose.model('User', userSchema)
-// mongoose.connection.db.dropDatabase();
+
 
 const loadFunction = async () => {
   
