@@ -40,15 +40,15 @@ const loadFunction = async () => {
         name: person.name,
         username: person.username,
         email: person.email,
-        address: {street: person.street, suite: person.suite, city: person.city, zipcode: person.zipcode, geo: {
-          lat: person.lat, lng: person.lng  
+        address: {street: person.address.street, suite: person.address.suite, city: person.address.city, zipcode: person.address.zipcode, geo: {
+          lat: person.address.geo.lat, lng: person.address.geo.lng  
         }},
         phone: person.phone,
         website: person.website,
         company: {
-            name: person.name,
-            catchPhrase: person.catchPhrase,
-            bs: person.bs
+            name: person.company.name,
+            catchPhrase: person.company.catchPhrase,
+            bs: person.company.bs
         } 
     })
     newUser.save((err) => {
