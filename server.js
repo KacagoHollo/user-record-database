@@ -1,16 +1,18 @@
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-// const fetch = require('node-fetch');
-const http = require('axios')
+const http = require('axios');
+
+const User = require('./model/user')
+const userRoutes = require('./route/user');
 
 const app = express();
 const port = 3000;
-// const users = require('./users.json')
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/users', userRoutes);
 
 mongoose
   .connect(process.env.USERS, {
@@ -24,26 +26,6 @@ mongoose
   .then (() => mongoose.connection.db.dropDatabase())
   .then(() => console.log("Connected"))
   .catch(() => console.log("Error"));
-
-
-const userSchema = new mongoose.Schema({
-  id: Number,
-  name: String,
-  username: String,
-  email: String,
-  address: {street: String, suite: String, city: String, zipcode: String, geo: {
-        lat: String, lng: String  
-      }},
-      phone: String,
-      website: String,
-      company: {
-        name: String,
-        catchPhrase: String,
-        bs: String
-      } 
-    })
-
-const User = mongoose.model('User', userSchema)
 
 
 const loadFunction = async () => {
@@ -79,21 +61,11 @@ const loadFunction = async () => {
 }
 
 
-
 app.get('/', async (req, res) => {
   const finding = await User.find();
   res.json(finding)
 })
 
-
-// app.get("/", (req, res) => {
-  
- 
-//     })
-    
-
-
-    
 
 
 loadFunction()
