@@ -53,19 +53,14 @@ const loadFunction = async () => {
     })
     newUser.save((err) => {
       if (err) console.log(err)
-    } 
-     )
+      } 
+    )
   }
-  )
- 
-}
-
+)}
 
 app.get('/', async (req, res) => {
   const finding = await User.find();
   res.json(finding)
 })
-
-
 
 loadFunction()
